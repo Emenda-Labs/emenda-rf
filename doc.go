@@ -360,4 +360,4 @@
 // # Bugs Bugs Bugs
 //
 // Rf is very very rough. Everything is subject to change, and it may break your programs.
-package main
+package rf

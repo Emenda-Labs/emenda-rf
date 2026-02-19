@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package main
+package rf
 
 import (
 	"bytes"
@@ -147,9 +147,10 @@ func TestRun(t *testing.T) {
 			}
 
 			// Process flags in the comment.
-			var flags flags
+			var showDiff, allPlat bool
 			flagSet := flag.NewFlagSet(filepath.Base(file), flag.ContinueOnError)
-			flags.register(flagSet)
+			flagSet.BoolVar(&showDiff, "diff", false, "show diff instead of writing files")
+			flagSet.BoolVar(&allPlat, "allplat", false, "apply refactoring across all GOOS/GOARCH combinations")
 			lines := bytes.Split(ar.Comment, []byte("\n"))
 			var script strings.Builder
 			for _, line := range lines {
@@ -186,9 +187,16 @@ func TestRun(t *testing.T) {
 			}
 			rf.Stdout = &stdout
 			rf.Stderr = &stderr
-			flags.apply(rf)
+			rf.ShowDiff = showDiff
+			if allPlat {
+				var err error
+				rf.Configs, err = refactor.ConfigsAllPlatforms()
+				if err != nil {
+					t.Fatal(err)
+				}
+			}
 			rf.ShowDiff = true
-			if err := run(rf, script.String()); err != nil {
+			if err := Run(rf, script.String()); err != nil {
 				fmt.Fprintf(rf.Stderr, "%v\n", err)
 			}
 

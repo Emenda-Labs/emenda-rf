@@ -5,7 +5,7 @@
 // Expression matching adapted from eg;
 // type matching adapted from go/types.
 
-package main
+package rf
 
 import (
 	"bytes"

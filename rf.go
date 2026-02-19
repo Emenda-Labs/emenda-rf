@@ -2,14 +2,12 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package main
+package rf
 
 import (
 	"bytes"
 	"errors"
-	"flag"
 	"fmt"
-	"log"
 	"os"
 	"regexp"
 	"strings"
@@ -18,59 +16,8 @@ import (
 	"rsc.io/rf/refactor"
 )
 
-type flags struct {
-	showDiff bool
-	allPlat  bool
-}
-
-func (f *flags) register(fs *flag.FlagSet) {
-	fs.BoolVar(&f.showDiff, "diff", false, "show diff instead of writing files")
-	fs.BoolVar(&f.allPlat, "allplat", false, "apply refactoring across all GOOS/GOARCH combinations")
-}
-
-func (f *flags) apply(rf *refactor.Refactor) error {
-	rf.ShowDiff = f.showDiff
-	if f.allPlat {
-		var err error
-		rf.Configs, err = refactor.ConfigsAllPlatforms()
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func usage() {
-	fmt.Fprintf(os.Stderr, "usage: rf [-diff] script\n")
-	os.Exit(2)
-}
-
-func main() {
-	log.SetPrefix("rf: ")
-	log.SetFlags(0)
-
-	var flags flags
-	flags.register(flag.CommandLine)
-	flag.Usage = usage
-	flag.Parse()
-	args := flag.Args()
-	if len(args) != 1 {
-		usage()
-	}
-	script := args[0]
-
-	rf, err := refactor.New(".")
-	if err != nil {
-		log.Fatal(err)
-	}
-	flags.apply(rf)
-
-	if err := run(rf, script); err != nil {
-		log.Fatal(err)
-	}
-}
-
-var cmds = map[string]func(*refactor.Snapshot, string) error{
+// Cmds is the registry of available refactoring commands.
+var Cmds = map[string]func(*refactor.Snapshot, string) error{
 	"add":        cmdAdd,
 	"sub":        cmdSub,
 	"debug":      cmdDebug,
@@ -83,7 +30,10 @@ var cmds = map[string]func(*refactor.Snapshot, string) error{
 	"inject":     cmdInject,
 }
 
-func run(rf *refactor.Refactor, script string) error {
+// Run executes an rf refactoring script against the given Refactor context.
+// It parses the script, applies each command, and writes changes to disk
+// (or prints a diff if rf.ShowDiff is set).
+func Run(rf *refactor.Refactor, script string) error {
 	var snaps []*refactor.Snapshot
 
 	text := script
@@ -112,7 +62,7 @@ func run(rf *refactor.Refactor, script string) error {
 			fmt.Fprintf(os.Stderr, "> %s\n", line)
 		}
 
-		fn := cmds[cmd]
+		fn := Cmds[cmd]
 		if fn == nil {
 			return fmt.Errorf("unknown command %s", cmd)
 		}
