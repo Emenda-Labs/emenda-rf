@@ -42,7 +42,7 @@ import (
 
 func usage() {
 	fmt.Fprintf(os.Stderr, "usage: git-generate [-conflict] [-f file]\n")
-	fmt.Fprintf(os.Stderr, "See 'go doc rsc.io/rf/git-generate' for details.\n")
+	fmt.Fprintf(os.Stderr, "See 'go doc github.com/Emenda-Labs/emenda-rf/git-generate' for details.\n")
 	os.Exit(2)
 }
 

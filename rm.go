@@ -11,7 +11,7 @@ import (
 	"go/token"
 	"go/types"
 
-	"rsc.io/rf/refactor"
+	"github.com/Emenda-Labs/emenda-rf/refactor"
 )
 
 func cmdRm(snap *refactor.Snapshot, args string) error {

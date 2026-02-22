@@ -14,9 +14,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/Emenda-Labs/emenda-rf/diff"
+	"github.com/Emenda-Labs/emenda-rf/refactor"
 	"golang.org/x/tools/txtar"
-	"rsc.io/rf/diff"
-	"rsc.io/rf/refactor"
 )
 
 var readLineTests = []struct {

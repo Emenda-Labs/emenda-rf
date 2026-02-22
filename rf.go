@@ -13,7 +13,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"rsc.io/rf/refactor"
+	"github.com/Emenda-Labs/emenda-rf/refactor"
 )
 
 // Cmds is the registry of available refactoring commands.

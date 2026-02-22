@@ -12,7 +12,7 @@ import (
 	"go/types"
 	"strings"
 
-	"rsc.io/rf/refactor"
+	"github.com/Emenda-Labs/emenda-rf/refactor"
 )
 
 func mvStmt(snap *refactor.Snapshot, old *refactor.Item, name string) {

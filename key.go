@@ -8,7 +8,7 @@ import (
 	"go/ast"
 	"go/types"
 
-	"rsc.io/rf/refactor"
+	"github.com/Emenda-Labs/emenda-rf/refactor"
 )
 
 func cmdKey(snap *refactor.Snapshot, args string) error {

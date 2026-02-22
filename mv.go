@@ -15,7 +15,7 @@ import (
 	"regexp"
 	"strings"
 
-	"rsc.io/rf/refactor"
+	"github.com/Emenda-Labs/emenda-rf/refactor"
 )
 
 type posChecker func(snap *refactor.Snapshot, stack []ast.Node)

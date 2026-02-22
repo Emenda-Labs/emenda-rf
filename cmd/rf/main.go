@@ -10,8 +10,8 @@ import (
 	"log"
 	"os"
 
-	rf "rsc.io/rf"
-	"rsc.io/rf/refactor"
+	rf "github.com/Emenda-Labs/emenda-rf"
+	"github.com/Emenda-Labs/emenda-rf/refactor"
 )
 
 func usage() {

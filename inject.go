@@ -11,7 +11,7 @@ import (
 	"go/types"
 	"strings"
 
-	"rsc.io/rf/refactor"
+	"github.com/Emenda-Labs/emenda-rf/refactor"
 )
 
 // origin returns the origin for the given [types.Object]. Normally, this is
@@ -206,7 +206,7 @@ func cmdInject(snap *refactor.Snapshot, args string) error {
 					if outer.Kind == refactor.ItemPkg {
 						if pkg.Types == outer.Obj.(*types.PkgName).Imported() {
 							// Don't add an import if we are already in that package
-							name = strings.TrimPrefix(name, outer.Name + ".")
+							name = strings.TrimPrefix(name, outer.Name+".")
 							return
 						}
 						name = snap.NeedImport(stack[1].Pos(), "", outer.Obj.(*types.PkgName).Imported()) + strings.TrimPrefix(name, outer.Name)

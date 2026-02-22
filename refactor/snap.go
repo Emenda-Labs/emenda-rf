@@ -23,7 +23,7 @@ import (
 	"strings"
 	"time"
 
-	"rsc.io/rf/diff"
+	"github.com/Emenda-Labs/emenda-rf/diff"
 )
 
 const (
@@ -848,7 +848,7 @@ func (s *Snapshot) typeCheck() {
 		s.check(p)
 		if p.Types == nil {
 			if s.r.Lenient {
-				return nil  // continue checking other packages
+				return nil // continue checking other packages
 			}
 			return visitStop
 		}

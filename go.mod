@@ -1,4 +1,4 @@
-module rsc.io/rf
+module github.com/Emenda-Labs/emenda-rf
 
 go 1.20
 

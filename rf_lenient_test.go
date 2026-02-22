@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"rsc.io/rf/refactor"
+	"github.com/Emenda-Labs/emenda-rf/refactor"
 )
 
 // TestLenientMvCrossPackage tests that "mv pkg.OldFunc pkg.NewFunc" renames

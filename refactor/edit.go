@@ -19,7 +19,7 @@ import (
 	"sort"
 	"strings"
 
-	"rsc.io/rf/diff"
+	"github.com/Emenda-Labs/emenda-rf/diff"
 )
 
 type Edit struct {

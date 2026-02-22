@@ -10,7 +10,7 @@ import (
 	"go/token"
 	"strings"
 
-	"rsc.io/rf/refactor"
+	"github.com/Emenda-Labs/emenda-rf/refactor"
 )
 
 func cmdAdd(snap *refactor.Snapshot, args string) error {
