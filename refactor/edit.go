@@ -332,11 +332,17 @@ func (s *Snapshot) Write() error {
 		if bytes.Equal(old, new) {
 			continue
 		}
+		// Resolve relative paths against the module root directory,
+		// matching the same logic used in Diff().
+		absName := name
+		if !filepath.IsAbs(absName) {
+			absName = filepath.Join(s.r.dir, absName)
+		}
 		var err error
 		if len(new) == 0 {
-			err = os.Remove(name)
+			err = os.Remove(absName)
 		} else {
-			dir := filepath.Dir(name)
+			dir := filepath.Dir(absName)
 			if created[dir] == 0 {
 				created[dir] = 1
 				if info, err := os.Stat(dir); err != nil || !info.IsDir() {
@@ -349,7 +355,7 @@ func (s *Snapshot) Write() error {
 				}
 			}
 			if created[dir] == 1 {
-				err = ioutil.WriteFile(name, new, 0666)
+				err = ioutil.WriteFile(absName, new, 0666)
 			}
 		}
 		if err != nil {

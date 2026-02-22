@@ -639,7 +639,11 @@ func (r *Refactor) load1(config Config) ([]*Snapshot, error) {
 			s.typeCheck()
 		}
 		if err := s.Errors.Err(); err != nil {
-			errs.Add(err)
+			if !s.r.Lenient {
+				errs.Add(err)
+			} else {
+				s.Errors = &ErrorList{}
+			}
 		}
 	}
 	if err := errs.Err(); err != nil {
@@ -768,7 +772,10 @@ func (oldS *Snapshot) apply() (*Snapshot, error) {
 		s.typeCheck()
 	}
 	if err := s.Errors.Err(); err != nil {
-		return nil, err
+		if !s.r.Lenient {
+			return nil, err
+		}
+		s.Errors = &ErrorList{}
 	}
 	return s, nil
 }
@@ -840,6 +847,9 @@ func (s *Snapshot) typeCheck() {
 		}
 		s.check(p)
 		if p.Types == nil {
+			if s.r.Lenient {
+				return nil  // continue checking other packages
+			}
 			return visitStop
 		}
 		return nil
@@ -923,7 +933,10 @@ func (s *Snapshot) check(p *Package) {
 	}
 	tpkg, err := conf.Check(p.PkgPath, s.fset, files, info)
 	if err != nil {
-		return
+		if !s.r.Lenient || tpkg == nil {
+			return
+		}
+		// Lenient mode: keep partial type info despite errors.
 	}
 	p.Types = tpkg
 	p.TypesInfo = info

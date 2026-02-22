@@ -87,7 +87,7 @@ func Run(rf *refactor.Refactor, script string) error {
 			if targ == nil {
 				return fmt.Errorf("missing target")
 			}
-			if targ.Types == nil {
+			if targ.Types == nil && !snap.Refactor().Lenient {
 				return fmt.Errorf("no types in target")
 			}
 
@@ -119,14 +119,16 @@ func Run(rf *refactor.Refactor, script string) error {
 		switch err := rf.Apply(); err.(type) {
 		case nil:
 		case *refactor.ErrorList:
-			// Show diff so errors are easier to understand.
-			snap, mergeErr := rf.MergeSnapshots()
-			if mergeErr != nil {
-				err = fmt.Errorf("%w\nalso merging snapshots failed:\n%w", err, mergeErr)
-			} else if d, err := snap.Diff(); err == nil {
-				rf.Stdout.Write(d)
+			if !rf.Lenient {
+				snap, mergeErr := rf.MergeSnapshots()
+				if mergeErr != nil {
+					err = fmt.Errorf("%w\nalso merging snapshots failed:\n%w", err, mergeErr)
+				} else if d, err := snap.Diff(); err == nil {
+					rf.Stdout.Write(d)
+				}
+				return wrapError(err, "errors found after executing: %s", lastCmd)
 			}
-			return wrapError(err, "errors found after executing: %s", lastCmd)
+			// Lenient: continue despite type errors after apply.
 		default:
 			return fmt.Errorf("checking rewritten packages: %w", err)
 		}

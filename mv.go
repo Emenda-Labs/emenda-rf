@@ -315,7 +315,8 @@ func rewriteUses(snap *refactor.Snapshot, old *refactor.Item, new string, checkP
 	// TODO: This should be something like
 	//	snap.ForReverseDepsFiles
 	// and it should load the reverse deps on demand.
-	if !token.IsExported(old.Outermost().Name) {
+	outermost := old.Outermost()
+	if outermost.Kind != refactor.ItemPkg && !token.IsExported(outermost.Name) {
 		pkg, _ := snap.FileAt(old.Obj.Pos())
 		for _, file := range pkg.Files {
 			fix(pkg, file.Syntax)

@@ -244,7 +244,6 @@ func (s *Snapshot) Eval(expr string) *Item {
 			pkg.Name = name
 			if pkg.Kind == ItemPkg {
 				if !more {
-					fmt.Println("HAVE", pkg)
 					return pkg
 				}
 				name, rest, more = cut(rest, ".")

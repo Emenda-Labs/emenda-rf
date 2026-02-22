@@ -18,6 +18,7 @@ type Refactor struct {
 	Stdout   io.Writer
 	Stderr   io.Writer
 	ShowDiff bool
+	Lenient  bool             // tolerate type errors
 	Debug    map[string]string // debugging settings
 
 	// Configs is a set of build configurations to refactor.
