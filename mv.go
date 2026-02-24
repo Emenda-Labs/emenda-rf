@@ -256,6 +256,11 @@ func cmdMv(snap *refactor.Snapshot, args string) error {
 
 func rewriteDefn(snap *refactor.Snapshot, old *refactor.Item, new string) {
 	stack := snap.SyntaxAt(old.Obj.Pos())
+	if len(stack) == 0 {
+		// Definition is outside the snapshot source (e.g., external dependency).
+		// Skip definition rewrite; callers rely on rewriteUses for call sites.
+		return
+	}
 	// For a function declaration, the FuncType ends up spuriously on the stack.
 	// (It is considered to start at the func keyword and end after the results,
 	// so it sits both before and after the Ident, and it is walked after the Ident.)
